@@ -110,7 +110,7 @@ class APIRequest(abc.ABC):
         """Transform api request params into format which matches the signature of the
         endpoint."""
         return self.__dict__
-
+    
 
 @attr.s
 class BaseSearchGetRequest(APIRequest):
