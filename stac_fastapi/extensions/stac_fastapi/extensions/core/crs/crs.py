@@ -26,12 +26,7 @@ class CrsExtension(ApiExtension):
             "http://www.opengis.net/def/crs/EPSG/0/25832",
         ]
     )
-    bbox_crs: List[str] = attr.ib(
-        factory=lambda: [
-            "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-            "http://www.opengis.net/def/crs/EPSG/0/25832",
-        ]
-    )
+
     # Service wide storage-crs ( will be overriden if defined in collection entry )
     storageCrs: str = attr.ib(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84")
     conformance_classes: List[str] = attr.ib(
