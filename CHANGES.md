@@ -2,6 +2,71 @@
 
 ## [Unreleased]
 
+## [2.5.5] - 2024-04-24
+
+### Fixed
+
+* Fix `service-doc` and `service-desc` url in landing page when using router prefix
+
+## [2.5.4] - 2024-04-24
+
+### Fixed
+
+* Fix missing payload for the PUT `collection/{collection_id}` endpoint ([#665](https://github.com/stac-utils/stac-fastapi/issues/665))
+* Return 400 for datetime errors ([#670](https://github.com/stac-utils/stac-fastapi/pull/670))
+
+## [2.5.3] - 2024-04-23
+
+### Fixed
+
+* Remove the str2list converter from intersection queries via BaseSearchGetRequest ([#668](https://github.com/stac-utils/stac-fastapi/pull/668))
+* Apply datetime converter in ItemCollection endpoint model ([#667](https://github.com/stac-utils/stac-fastapi/pull/667))
+
+## [2.5.2] - 2024-04-19
+
+### Fixed
+
+* BaseSearchGetRequest datetime validator str_to_interval not allowing GET /search requests with datetime = None ([#662](https://github.com/stac-utils/stac-fastapi/pull/662))
+
+## [2.5.1] - 2024-04-18
+
+### Fixed
+
+* Fixed warnings.warn deprecation syntax for response class and the context extension ([#660](https://github.com/stac-utils/stac-fastapi/pull/660))
+
+## [2.5.0] - 2024-04-12
+
+### Added
+
+* Add benchmark in CI ([#650](https://github.com/stac-utils/stac-fastapi/pull/650))
+* Add `/queryables` link to the landing page ([#587](https://github.com/stac-utils/stac-fastapi/pull/587))
+- `id`, `title`, `description` and `api_version` fields can be customized via env variables
+* Add `DeprecationWarning` for the `ContextExtension`
+
+### Changed
+
+* Updated the collection update endpoint to match with the collection-transaction extension. ([#630](https://github.com/stac-utils/stac-fastapi/issues/630))
+* Improve bbox and datetime typing ([#490](https://github.com/stac-utils/stac-fastapi/pull/490)
+* Add `items` link to inferred link relations ([#634](https://github.com/stac-utils/stac-fastapi/issues/634))
+* Make sure FastAPI uses Pydantic validation and serialization by not wrapping endpoint output with a Response object ([#650](https://github.com/stac-utils/stac-fastapi/pull/650))
+* Allow `GeometryCollections` for `intersects` parameter in POST search queries ([#548](https://github.com/stac-utils/stac-fastapi/pull/548))
+
+### Removed
+
+* Deprecate `response_class` option in `stac_fastapi.api.routes.create_async_endpoint` method ([#650](https://github.com/stac-utils/stac-fastapi/pull/650))
+
+## [2.4.9] - 2023-11-17
+
+### Added
+
+* Add CQL2-json to filter conformance class ([#611](https://github.com/stac-utils/stac-fastapi/issues/611))
+* Add Elasticsearch backend ([#616](https://github.com/stac-utils/stac-fastapi/pull/616))
+
+### Changed
+
+* Forward `x-forwarded-host` ([#586](https://github.com/stac-utils/stac-fastapi/pull/586))
+* Add `method` parameter to Bulk Transactions extension in order to support upserting bulk data ([#614](https://github.com/stac-utils/stac-fastapi/pull/614))
+
 ## [2.4.8] - 2023-06-07
 
 ### Changed
@@ -275,7 +340,14 @@
 
 * First PyPi release!
 
-[Unreleased]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.8..main>
+[Unreleased]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.5..main>
+[2.5.5]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.4..2.5.5>
+[2.5.4]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.3..2.5.4>
+[2.5.3]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.2..2.5.3>
+[2.5.2]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.1..2.5.2>
+[2.5.1]: <https://github.com/stac-utils/stac-fastapi/compare/2.5.0..2.5.1>
+[2.5.0]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.9..2.5.0>
+[2.4.9]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.8..2.4.9>
 [2.4.8]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.7..2.4.8>
 [2.4.7]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.6..2.4.7>
 [2.4.6]: <https://github.com/stac-utils/stac-fastapi/compare/2.4.5..2.4.6>

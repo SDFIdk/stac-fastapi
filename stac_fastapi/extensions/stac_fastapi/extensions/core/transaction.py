@@ -1,4 +1,5 @@
 """Transaction extension."""
+
 from typing import List, Optional, Type, Union
 
 import attr
@@ -31,6 +32,13 @@ class PutItem(ItemUri):
 
 
 @attr.s
+class PutCollection(CollectionUri):
+    """Update Collection."""
+
+    collection: stac_types.Collection = attr.ib(default=Body(None))
+
+
+@attr.s
 class TransactionExtension(ApiExtension):
     """Transaction Extension.
 
@@ -53,8 +61,7 @@ class TransactionExtension(ApiExtension):
     settings: ApiSettings = attr.ib()
     conformance_classes: List[str] = attr.ib(
         factory=lambda: [
-            "https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/extensions/transaction",
-            "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/simpletx",
+            "https://api.stacspec.org/v1.0.0-rc.3/ogcapi-features/extensions/transaction",
         ]
     )
     schema_href: Optional[str] = attr.ib(default=None)
@@ -118,17 +125,17 @@ class TransactionExtension(ApiExtension):
         )
 
     def register_update_collection(self):
-        """Register update collection endpoint (PUT /collections)."""
+        """Register update collection endpoint (PUT /collections/{collection_id})."""
         self.router.add_api_route(
             name="Update Collection",
-            path="/collections",
+            path="/collections/{collection_id}",
             response_model=Collection if self.settings.enable_response_models else None,
             response_class=self.response_class,
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["PUT"],
             endpoint=create_async_endpoint(
-                self.client.update_collection, stac_types.Collection
+                self.client.update_collection, PutCollection
             ),
         )
 

@@ -1,5 +1,6 @@
 # encoding: utf-8
 """Filter Extension."""
+
 from enum import Enum
 from typing import List, Type, Union
 
@@ -59,7 +60,7 @@ class FilterExtension(ApiExtension):
         GET /queryables
         GET /collections/{collection_id}/queryables
 
-    https://github.com/radiantearth/stac-api-spec/blob/master/fragments/filter/README.md
+    https://github.com/stac-api-extensions/filter/blob/main/README.md
 
     Attributes:
         client: Queryables endpoint logic
@@ -78,17 +79,16 @@ class FilterExtension(ApiExtension):
             FilterConformanceClasses.FEATURES_FILTER,
             FilterConformanceClasses.ITEM_SEARCH_FILTER,
             FilterConformanceClasses.BASIC_CQL,
-            #FilterConformanceClasses.BASIC_CQL2,
-            #FilterConformanceClasses.CQL2_TEXT,
+            # FilterConformanceClasses.BASIC_CQL2,
+            # FilterConformanceClasses.CQL2_TEXT,
             FilterConformanceClasses.CQL_JSON,
-            #FilterConformanceClasses.CQL2_JSON,
+            # FilterConformanceClasses.CQL2_JSON,
             FilterConformanceClasses.ADVANCED_COMPARISON_OPERATORS,
             FilterConformanceClasses.BASIC_SPATIAL_OPERATORS,
             FilterConformanceClasses.SPATIAL_OPERATORS,
             FilterConformanceClasses.TEMPORAL_OPERATORS,
             FilterConformanceClasses.ARITHMETIC,
             FilterConformanceClasses.PROPERTY_PROPERTY,
-
         ]
     )
     router: APIRouter = attr.ib(factory=APIRouter)

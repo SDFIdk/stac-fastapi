@@ -4,19 +4,23 @@ import importlib.util
 from typing import Optional, Type, Union
 
 import attr
-#from fastapi import Body, Path
+
+# from fastapi import Body, Path
 from fastapi import Body, Path, Query
 from pydantic import BaseModel, create_model
 from pydantic.fields import UndefinedType
+from stac_pydantic.shared import BBox
 
 from stac_fastapi.api import descriptions
 
 from stac_fastapi.types.extension import ApiExtension
+from stac_fastapi.types.rfc3339 import DateTimeType
 from stac_fastapi.types.search import (
     APIRequest,
     BaseSearchGetRequest,
     BaseSearchPostRequest,
-    str2list,
+    str2bbox,
+    str_to_interval,
 )
 
 
@@ -103,14 +107,14 @@ def create_post_request_model(
 
 @attr.s  # type:ignore
 class CollectionUri(APIRequest):
-    """Delete collection."""
+    """Get or delete collection."""
 
     collection_id: str = attr.ib(default=Path(..., description="Collection ID"))
 
 
 @attr.s
 class ItemUri(CollectionUri):
-    """Delete item."""
+    """Get or delete item."""
 
     item_id: str = attr.ib(default=Path(..., description="Item ID"))
     # Not implementet descriptions yet
@@ -130,13 +134,28 @@ class ItemCollectionUri(CollectionUri):
     """Get item collection."""
 
     limit: int = attr.ib(default=10)
-    bbox: Optional[str] = attr.ib(default=None, converter=str2list)
-    bbox_crs: Optional[str] = attr.ib(default=Query(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="bbox-crs"))
-    datetime: Optional[str] = attr.ib(default=None)
+    bbox: Optional[BBox] = attr.ib(default=None, converter=str2bbox)
+    bbox_crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="bbox-crs"
+        )
+    )
+    datetime: Optional[DateTimeType] = attr.ib(default=None, converter=str_to_interval)
     crs: Optional[str] = attr.ib(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84")
     filter: Optional[str] = attr.ib(default=Query(None, description=descriptions.FILTER))
-    filter_lang: Optional[str] = attr.ib(default=Query(default="cql-json", alias="filter-lang", description=descriptions.FILTER_LANG))
-    filter_crs: Optional[str] = attr.ib(default=Query(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs", description=descriptions.FILTER_CRS))
+    filter_lang: Optional[str] = attr.ib(
+        default=Query(
+            default="cql-json", alias="filter-lang", description=descriptions.FILTER_LANG
+        )
+    )
+    filter_crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            alias="filter-crs",
+            description=descriptions.FILTER_CRS,
+        )
+    )
+
 
 class POSTTokenPagination(BaseModel):
     """Token pagination model for POST requests."""
