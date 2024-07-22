@@ -16,6 +16,7 @@ from stac_fastapi.types.errors import NotFoundError
 from stac_fastapi.types.config import ApiSettings
 from stac_fastapi.types.conformance import BASE_CONFORMANCE_CLASSES
 from stac_fastapi.types.extension import ApiExtension
+from stac_fastapi.types.links import BaseHrefBuilder
 from stac_fastapi.types.requests import get_base_url
 from stac_fastapi.types.rfc3339 import DateTimeType
 from stac_fastapi.types.search import BaseSearchPostRequest
@@ -265,7 +266,8 @@ class LandingPageMixin(abc.ABC):
 
     def _landing_page(
         self,
-        base_url: str,
+        # base_url: str,
+        href_builder: BaseHrefBuilder,
         conformance_classes: List[str],
         extension_schemas: List[str],
     ) -> stac_types.LandingPage:
@@ -280,36 +282,42 @@ class LandingPageMixin(abc.ABC):
                 {
                     "rel": Relations.self.value,
                     "type": MimeTypes.json,
-                    "href": base_url,
+                    # "href": base_url,
+                    "href": href_builder.build("./"),
                 },
                 {
                     "rel": Relations.root.value,
                     "type": MimeTypes.json,
-                    "href": base_url,
+                    # "href": base_url,
+                    "href": href_builder.build("./"),
                 },
                 {
                     "rel": "data",
                     "type": MimeTypes.json,
-                    "href": urljoin(base_url, "collections"),
+                    # "href": urljoin(base_url, "collections"),
+                    "href": href_builder.build("./collections"),
                 },
                 {
                     "rel": Relations.conformance.value,
                     "type": MimeTypes.json,
                     "title": "STAC/OGC conformance classes implemented by this server",
-                    "href": urljoin(base_url, "conformance"),
+                    # "href": urljoin(base_url, "conformance"),
+                    "href": href_builder.build("./conformance"),
                 },
                 {
                     "rel": Relations.search.value,
                     "type": MimeTypes.geojson,
                     "title": "STAC search",
-                    "href": urljoin(base_url, "search"),
+                    # "href": urljoin(base_url, "search"),
+                    "href": href_builder.build("./search"),
                     "method": "GET",
                 },
                 {
                     "rel": Relations.search.value,
                     "type": MimeTypes.geojson,
                     "title": "STAC search",
-                    "href": urljoin(base_url, "search"),
+                    # "href": urljoin(base_url, "search"),
+                    "href": href_builder.build("./search"),
                     "method": "POST",
                 },
             ],
@@ -373,12 +381,18 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
         Returns:
             API landing page, serving as an entry point to the API.
         """
-        request: Request = kwargs["request"]
-        base_url = get_base_url(request)
+        # request: Request = kwargs["request"]
+        # base_url = get_base_url(request)
+        hrefbuilder = self.href_builder(**kwargs)
+        extension_schemas = [
+            schema.schema_href for schema in self.extensions if schema.schema_href
+        ]
         landing_page = self._landing_page(
-            base_url=base_url,
+            # base_url=base_url,
+            href_builder=hrefbuilder,
             conformance_classes=self.conformance_classes(),
-            extension_schemas=[],
+            # extension_schemas=[],
+            extension_schemas=extension_schemas,
         )
 
         # Add Queryables link
@@ -390,7 +404,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                     # TODO: replace this with MimeTypes.jsonschema,
                     "type": "application/schema+json",
                     "title": "Queryables",
-                    "href": urljoin(base_url, "queryables"),
+                    # "href": urljoin(base_url, "queryables"),
+                    "href": hrefbuilder.build("/queryables"),
                     "method": "GET",
                 }
             )
@@ -403,7 +418,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                     "rel": Relations.child.value,
                     "type": MimeTypes.json.value,
                     "title": collection.get("title") or collection.get("id"),
-                    "href": urljoin(base_url, f"collections/{collection['id']}"),
+                    # "href": urljoin(base_url, f"collections/{collection['id']}"),
+                    "href": hrefbuilder.build(f"collections/{collection['id']}"),
                 }
             )
 
@@ -413,7 +429,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                "href": str(request.url_for("openapi")),
+                #"href": str(request.url_for("openapi")),
+                "href": hrefbuilder.build("./openapi.json"),
             }
         )
 
@@ -423,7 +440,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                "href": str(request.url_for("swagger_ui_html")),
+                # "href": str(request.url_for("swagger_ui_html")),
+                "href": hrefbuilder.build("/swagger_ui_html"),
             }
         )
 
@@ -438,6 +456,16 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
             Conformance classes which the server conforms to.
         """
         return Conformance(conformsTo=self.conformance_classes())
+    
+    def href_builder(self, **kwargs) -> BaseHrefBuilder:
+        """Application href builder.
+
+        Returns:
+            BaseHrefBuilder which is used for constructing server hrefs used in responses.
+        """
+        request: Request = kwargs["request"]
+        base_url = str(request.base_url)
+        return BaseHrefBuilder(base_url)
 
     @abc.abstractmethod
     def post_search(
@@ -584,12 +612,18 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
         Returns:
             API landing page, serving as an entry point to the API.
         """
-        request: Request = kwargs["request"]
-        base_url = get_base_url(request)
+        # request: Request = kwargs["request"]
+        # base_url = get_base_url(request)
+        hrefbuilder = self.href_builder(**kwargs)
+        extension_schemas = [
+            schema.schema_href for schema in self.extensions if schema.schema_href
+        ]
         landing_page = self._landing_page(
-            base_url=base_url,
+            # base_url=base_url,
+            href_builder=hrefbuilder,
             conformance_classes=self.conformance_classes(),
-            extension_schemas=[],
+            # extension_schemas=[],
+            extension_schemas=extension_schemas,
         )
 
         # Add Queryables link
@@ -601,7 +635,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                     # TODO: replace this with MimeTypes.jsonschema,
                     "type": "application/schema+json",
                     "title": "Queryables",
-                    "href": urljoin(base_url, "queryables"),
+                    # "href": urljoin(base_url, "queryables"),
+                    "href": hrefbuilder.build("/queryables"),
                     "method": "GET",
                 }
             )
@@ -614,7 +649,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                     "rel": Relations.child.value,
                     "type": MimeTypes.json.value,
                     "title": collection.get("title") or collection.get("id"),
-                    "href": urljoin(base_url, f"collections/{collection['id']}"),
+                    # "href": urljoin(base_url, f"collections/{collection['id']}"),
+                    "href": hrefbuilder.build(f"collections/{collection['id']}"),
                 }
             )
 
@@ -624,7 +660,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                "href": str(request.url_for("openapi")),
+                # "href": str(request.url_for("openapi")),
+                "href": hrefbuilder.build("./openapi.json"),
             }
         )
 
@@ -634,7 +671,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                "href": str(request.url_for("swagger_ui_html")),
+                # "href": str(request.url_for("swagger_ui_html")),
+                "href": hrefbuilder.build("/swagger_ui_html"),
             }
         )
 
@@ -649,6 +687,16 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
             Conformance classes which the server conforms to.
         """
         return Conformance(conformsTo=self.conformance_classes())
+    
+    async def href_builder(self, **kwargs) -> BaseHrefBuilder:
+        """Application href builder.
+
+        Returns:
+            BaseHrefBuilder which is used for constructing server hrefs used in responses.
+        """
+        request: Request = kwargs["request"]
+        base_url = str(request.base_url)
+        return BaseHrefBuilder(base_url)
 
     @abc.abstractmethod
     async def post_search(
