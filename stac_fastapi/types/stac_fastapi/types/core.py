@@ -381,7 +381,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
         Returns:
             API landing page, serving as an entry point to the API.
         """
-        # request: Request = kwargs["request"]
+        request: Request = kwargs["request"]
         # base_url = get_base_url(request)
         hrefbuilder = self.href_builder(**kwargs)
         extension_schemas = [
@@ -429,8 +429,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                #"href": str(request.url_for("openapi")),
-                "href": hrefbuilder.build("./openapi.json"),
+                "href": str(request.url_for("openapi")),
             }
         )
 
@@ -440,8 +439,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                # "href": str(request.url_for("swagger_ui_html")),
-                "href": hrefbuilder.build("/swagger_ui_html"),
+                "href": str(request.url_for("swagger_ui_html")),
             }
         )
 
@@ -612,7 +610,7 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
         Returns:
             API landing page, serving as an entry point to the API.
         """
-        # request: Request = kwargs["request"]
+        request: Request = kwargs["request"]
         # base_url = get_base_url(request)
         hrefbuilder = self.href_builder(**kwargs)
         extension_schemas = [
@@ -660,8 +658,7 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                # "href": str(request.url_for("openapi")),
-                "href": hrefbuilder.build("./openapi.json"),
+                "href": str(request.url_for("openapi")),
             }
         )
 
@@ -671,8 +668,7 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                # "href": str(request.url_for("swagger_ui_html")),
-                "href": hrefbuilder.build("/swagger_ui_html"),
+                "href": str(request.url_for("swagger_ui_html")),
             }
         )
 
