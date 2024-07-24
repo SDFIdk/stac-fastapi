@@ -1,4 +1,5 @@
 """stac_fastapi.types.config module."""
+
 from typing import Optional, Set
 
 from pydantic import BaseSettings
@@ -30,7 +31,7 @@ class ApiSettings(BaseSettings):
     app_host: str = "0.0.0.0"
     app_port: int = 8000
     reload: bool = True
-    enable_response_models: bool = False
+    enable_response_models: bool = True
 
     openapi_url: str = "/api"
     docs_url: str = "/api.html"
