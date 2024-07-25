@@ -58,7 +58,7 @@ FILTER_CRS="""The coordinate reference system (CRS) used by spatial literals in 
 Default is `http://www.opengis.net/def/crs/OGC/1.3/CRS84`.
 """
 
-SORTBY="""An array of property names, prefixed by either "+" for ascending or "-" for descending. If no prefix is provided, "+" is assumed.
+SORTBY="""An array of property names, prefixed by either "+" for ascending or "-" for descending. If no prefix is provided, "+" is assumed. If GET request remember to urlencode the prefix.
 
 Example: `-gsd,-datetime`
 """
