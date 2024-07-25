@@ -116,17 +116,53 @@ class APIRequest(abc.ABC):
 class BaseSearchGetRequest(APIRequest):
     """Base arguments for GET Request."""
 
-    collections: Optional[str] = attr.ib(default=None, converter=str2list)
-    ids: Optional[str] = attr.ib(default=None, converter=str2list)
-    bbox: Optional[BBox] = attr.ib(default=None, converter=str2bbox)
-    bbox_crs: Optional[str] = attr.ib(default=Query(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="bbox-crs", description=descriptions.BBOX_CRS))
-    intersects: Optional[str] = attr.ib(default=None)
-    datetime: Optional[DateTimeType] = attr.ib(default=None, converter=str_to_interval)
-    limit: Optional[int] = attr.ib(default=10)
-    crs: Optional[str] = attr.ib(default=Query("http://www.opengis.net/def/crs/OGC/1.3/CRS84", description=descriptions.CRS))
-    filter: Optional[str] = attr.ib(default=Query(None, description=descriptions.FILTER))
-    filter_lang: Optional[str] = attr.ib(default=Query(default="cql-json", alias="filter-lang", description=descriptions.FILTER_LANG))
-    filter_crs: Optional[str] = attr.ib(default=Query(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs", description=descriptions.FILTER_CRS))
+    collections: Optional[str] = attr.ib(
+        default=Query(default=None, description=descriptions.COLLECTIONS),
+        converter=str2list,
+    )
+    ids: Optional[str] = attr.ib(
+        default=Query(default=None, description=descriptions.IDS), converter=str2list
+    )
+    bbox: Optional[BBox] = attr.ib(
+        default=Query(default=None, description=descriptions.BBOX), converter=str2bbox
+    )
+    bbox_crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            alias="bbox-crs",
+            description=descriptions.BBOX_CRS,
+        )
+    )
+    intersects: Optional[str] = attr.ib(
+        default=Query(default=None, description=descriptions.INTERSECTS)
+    )
+    datetime: Optional[DateTimeType] = attr.ib(
+        default=Query(default=None, description=descriptions.DATETIME),
+        converter=str_to_interval,
+    )
+    limit: Optional[int] = attr.ib(
+        default=Query(default=10, description=descriptions.LIMIT)
+    )
+    crs: Optional[str] = attr.ib(
+        default=Query(
+            "http://www.opengis.net/def/crs/OGC/1.3/CRS84", description=descriptions.CRS
+        )
+    )
+    filter: Optional[str] = attr.ib(
+        default=Query(default=None, description=descriptions.FILTER)
+    )
+    filter_lang: Optional[str] = attr.ib(
+        default=Query(
+            default="cql-json", alias="filter-lang", description=descriptions.FILTER_LANG
+        )
+    )
+    filter_crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            alias="filter-crs",
+            description=descriptions.FILTER_CRS,
+        )
+    )
 
 
 class BaseSearchPostRequest(BaseModel):

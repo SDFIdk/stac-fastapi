@@ -109,17 +109,22 @@ def create_post_request_model(
 class CollectionUri(APIRequest):
     """Get or delete collection."""
 
-    collection_id: str = attr.ib(default=Path(..., description="Collection ID"))
+    collection_id: str = attr.ib(
+        default=Path(..., description=descriptions.COLLECTION_ID)
+    )
 
 
 @attr.s
 class ItemUri(CollectionUri):
     """Get or delete item."""
 
-    item_id: str = attr.ib(default=Path(..., description="Item ID"))
-    # Not implementet descriptions yet
-    # crs: Optional[str] = attr.ib(default=Query(None, description=descriptions.CRS))
-    crs: Optional[str] = attr.ib(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84")
+    item_id: str = attr.ib(default=Path(..., description=descriptions.ITEM_ID))
+    crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            description=descriptions.CRS,
+        )
+    )
 
 
 @attr.s
@@ -133,15 +138,39 @@ class EmptyRequest(APIRequest):
 class ItemCollectionUri(CollectionUri):
     """Get item collection."""
 
-    limit: int = attr.ib(default=10)
-    bbox: Optional[BBox] = attr.ib(default=None, converter=str2bbox)
-    bbox_crs: Optional[str] = attr.ib(
+    limit: int = attr.ib(
         default=Query(
-            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="bbox-crs"
+            default=10,
+            description=descriptions.LIMIT,
         )
     )
-    datetime: Optional[DateTimeType] = attr.ib(default=None, converter=str_to_interval)
-    crs: Optional[str] = attr.ib(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84")
+    bbox: Optional[BBox] = attr.ib(
+        default=Query(
+            default=None,
+            description=descriptions.BBOX,
+        ),
+        converter=str2bbox,
+    )
+    bbox_crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            alias="bbox-crs",
+            description=descriptions.BBOX_CRS,
+        )
+    )
+    datetime: Optional[DateTimeType] = attr.ib(
+        default=Query(
+            default=None,
+            description=descriptions.DATETIME,
+        ),
+        converter=str_to_interval,
+    )
+    crs: Optional[str] = attr.ib(
+        default=Query(
+            default="http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+            description=descriptions.CRS,
+        )
+    )
     filter: Optional[str] = attr.ib(default=Query(None, description=descriptions.FILTER))
     filter_lang: Optional[str] = attr.ib(
         default=Query(
@@ -169,7 +198,12 @@ class GETTokenPagination(APIRequest):
     """Token pagination for GET requests."""
 
     # token: Optional[str] = attr.ib(default=None)
-    pt: Optional[str] = attr.ib(default=None)
+    pt: Optional[str] = attr.ib(
+        default=Query(
+            default=None,
+            description=descriptions.PAGING_TOKEN,
+        )
+    )
 
 
 class POSTPagination(BaseModel):
