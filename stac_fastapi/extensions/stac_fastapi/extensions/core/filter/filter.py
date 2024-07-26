@@ -12,6 +12,7 @@ from stac_fastapi.api.models import CollectionUri, EmptyRequest, JSONSchemaRespo
 from stac_fastapi.api.routes import create_async_endpoint
 from stac_fastapi.types.core import AsyncBaseFiltersClient, BaseFiltersClient
 from stac_fastapi.types.extension import ApiExtension
+from stac_fastapi.api import descriptions
 
 from .request import FilterExtensionGetRequest, FilterExtensionPostRequest
 
@@ -111,6 +112,7 @@ class FilterExtension(ApiExtension):
             endpoint=create_async_endpoint(
                 self.client.get_queryables, EmptyRequest, self.response_class
             ),
+            description=descriptions.QUERYABLES,
         )
         self.router.add_api_route(
             name="Collection Queryables",
@@ -119,5 +121,6 @@ class FilterExtension(ApiExtension):
             endpoint=create_async_endpoint(
                 self.client.get_queryables, CollectionUri, self.response_class
             ),
+            description=descriptions.COLLECTION_QUERYABLES,
         )
         app.include_router(self.router, tags=["Filter Extension"])
