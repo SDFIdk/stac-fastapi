@@ -39,3 +39,9 @@ class InvalidQueryParameter(StacApiError):
     """
 
     pass
+
+
+class TimeoutError(StacApiError):
+    """Timeout error (SQL statement took longer than 10 seconds)."""
+
+    pass
