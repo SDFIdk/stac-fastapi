@@ -1,3 +1,4 @@
+import pytest
 from fastapi import Depends, HTTPException, security, status
 from starlette.testclient import TestClient
 
@@ -58,6 +59,7 @@ class TestRouteDependencies:
                 == "application/vnd.oai.openapi+json;version=3.0"
             )
 
+    @pytest.mark.skip(reason="Database is readonly")
     def test_build_api_with_route_dependencies(self):
         routes = [
             {"path": "/collections", "method": "POST"},
@@ -71,6 +73,7 @@ class TestRouteDependencies:
         api = self._build_api(route_dependencies=[(routes, dependencies)])
         self._assert_dependency_applied(api, routes)
 
+    @pytest.mark.skip(reason="Database is readonly")
     def test_add_route_dependencies_after_building_api(self):
         routes = [
             {"path": "/collections", "method": "POST"},

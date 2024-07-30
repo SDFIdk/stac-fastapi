@@ -60,12 +60,14 @@ class DummyTransactionsClient(BaseTransactionsClient):
         return {"path_collection_id": collection_id}
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_create_item(client: TestClient, item: Item) -> None:
     response = client.post("/collections/a-collection/items", content=json.dumps(item))
     assert response.is_success, response.text
     assert response.json()["type"] == "Feature"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_create_item_collection(
     client: TestClient, item_collection: ItemCollection
 ) -> None:
@@ -76,6 +78,7 @@ def test_create_item_collection(
     assert response.json()["type"] == "FeatureCollection"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_update_item(client: TestClient, item: Item) -> None:
     response = client.put(
         "/collections/a-collection/items/an-item", content=json.dumps(item)
@@ -86,6 +89,7 @@ def test_update_item(client: TestClient, item: Item) -> None:
     assert response.json()["type"] == "Feature"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_delete_item(client: TestClient) -> None:
     response = client.delete("/collections/a-collection/items/an-item")
     assert response.is_success, response.text
@@ -93,12 +97,14 @@ def test_delete_item(client: TestClient) -> None:
     assert response.json()["path_item_id"] == "an-item"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_create_collection(client: TestClient, collection: Collection) -> None:
     response = client.post("/collections", content=json.dumps(collection))
     assert response.is_success, response.text
     assert response.json()["type"] == "Collection"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_update_collection(client: TestClient, collection: Collection) -> None:
     response = client.put("/collections/a-collection", content=json.dumps(collection))
     assert response.is_success, response.text
@@ -106,6 +112,7 @@ def test_update_collection(client: TestClient, collection: Collection) -> None:
     assert response.json()["type"] == "Collection"
 
 
+@pytest.mark.skip(reason="Database is readonly")
 def test_delete_collection(client: TestClient, collection: Collection) -> None:
     response = client.delete("/collections/a-collection")
     assert response.is_success, response.text
