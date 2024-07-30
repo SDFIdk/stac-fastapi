@@ -429,7 +429,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                "href": str(request.url_for("openapi")),
+                # "href": str(request.url_for("openapi")),
+                "href": hrefbuilder.build("/api"),
             }
         )
 
@@ -439,7 +440,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                "href": str(request.url_for("swagger_ui_html")),
+                # "href": str(request.url_for("swagger_ui_html")),
+                "href": hrefbuilder.build("/api.html"),
             }
         )
 
@@ -658,7 +660,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                "href": str(request.url_for("openapi")),
+                # "href": str(request.url_for("openapi")),
+                "href": hrefbuilder.build("/api"),
             }
         )
 
@@ -668,7 +671,8 @@ class AsyncBaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-doc",
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
-                "href": str(request.url_for("swagger_ui_html")),
+                # "href": str(request.url_for("swagger_ui_html")),
+                "href": hrefbuilder.build("/api.html"),
             }
         )
 
