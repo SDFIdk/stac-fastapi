@@ -39,8 +39,10 @@ def datetime_to_str(dt: datetime, timespec: str = "auto") -> str:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
 
-    timestamp = dt.isoformat(timespec=timespec)
-    zulu = "+01:00"
+    # timestamp = dt.isoformat(timespec=timespec)
+    # Postgres returns datetime in client time zone. Convert to UTC
+    timestamp = dt.astimezone(timezone.utc).isoformat(timespec=timespec)
+    zulu = "+00:00"
     if timestamp.endswith(zulu):
         timestamp = f"{timestamp[: -len(zulu)]}Z"
 
