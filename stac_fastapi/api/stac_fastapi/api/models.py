@@ -24,6 +24,13 @@ from stac_fastapi.types.search import (
 )
 
 
+try:
+    import orjson  # noqa
+    from fastapi.responses import ORJSONResponse as JSONResponse
+except ImportError:  # pragma: nocover
+    from starlette.responses import JSONResponse
+
+
 def create_request_model(
     model_name="SearchGetRequest",
     base_model: Union[Type[BaseModel], APIRequest] = BaseSearchGetRequest,
@@ -219,29 +226,13 @@ class GETPagination(APIRequest):
     page: Optional[str] = attr.ib(default=None)
 
 
-# Test for ORJSON and use it rather than stdlib JSON where supported
-if importlib.util.find_spec("orjson") is not None:
-    from fastapi.responses import ORJSONResponse
+class GeoJSONResponse(JSONResponse):
+    """JSON with custom, vendor content-type."""
 
-    class GeoJSONResponse(ORJSONResponse):
-        """JSON with custom, vendor content-type."""
+    media_type = "application/geo+json"
 
-        media_type = "application/geo+json"
 
-    class JSONSchemaResponse(ORJSONResponse):
-        """JSON with custom, vendor content-type."""
+class JSONSchemaResponse(JSONResponse):
+    """JSON with custom, vendor content-type."""
 
-        media_type = "application/schema+json"
-
-else:
-    from starlette.responses import JSONResponse
-
-    class GeoJSONResponse(JSONResponse):
-        """JSON with custom, vendor content-type."""
-
-        media_type = "application/geo+json"
-
-    class JSONSchemaResponse(JSONResponse):
-        """JSON with custom, vendor content-type."""
-
-        media_type = "application/schema+json"
+    media_type = "application/schema+json"
