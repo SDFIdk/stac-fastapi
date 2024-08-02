@@ -1,4 +1,5 @@
 """Api middleware."""
+
 import re
 import typing
 from http.client import HTTP_PORT, HTTPS_PORT
@@ -126,7 +127,7 @@ class ProxyHeaderMiddleware:
                 # ignore ports that are not valid integers
                 pass
 
-        # return (proto, domain, port, prefix)
+        # return (proto, domain, port)
         return (proto, domain, port, prefix)
 
     def _get_header_value_by_name(
