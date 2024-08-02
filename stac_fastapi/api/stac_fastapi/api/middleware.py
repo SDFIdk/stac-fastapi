@@ -58,7 +58,8 @@ class ProxyHeaderMiddleware:
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         """Call from stac-fastapi framework."""
         if scope["type"] == "http":
-            proto, domain, port = self._get_forwarded_url_parts(scope)
+            # proto, domain, port = self._get_forwarded_url_parts(scope)
+            proto, domain, port, prefix = self._get_forwarded_url_parts(scope)
             scope["scheme"] = proto
             if domain is not None:
                 port_suffix = ""
@@ -67,11 +68,23 @@ class ProxyHeaderMiddleware:
                         proto == "https" and port != HTTPS_PORT
                     ):
                         port_suffix = f":{port}"
-                scope["headers"] = self._replace_header_value_by_name(
-                    scope,
-                    "host",
-                    f"{domain}{port_suffix}",
-                )
+                # scope["headers"] = self._replace_header_value_by_name(
+                #     scope,
+                #     "host",
+                #     f"{domain}{port_suffix}",
+                # )
+                if prefix is not None:
+                    scope["headers"] = self._replace_header_value_by_name(
+                        scope,
+                        "host",
+                        f"{domain}{prefix}",
+                    )
+                else:
+                    scope["headers"] = self._replace_header_value_by_name(
+                        scope,
+                        "host",
+                        f"{domain}{port_suffix}",
+                    )
         await self.app(scope, receive, send)
 
     def _get_forwarded_url_parts(self, scope: Scope) -> Tuple[str]:
@@ -106,13 +119,15 @@ class ProxyHeaderMiddleware:
             domain = self._get_header_value_by_name(scope, "x-forwarded-host", domain)
             proto = self._get_header_value_by_name(scope, "x-forwarded-proto", proto)
             port_str = self._get_header_value_by_name(scope, "x-forwarded-port", port)
+            prefix = self._get_header_value_by_name(scope, "x-forwarded-prefix")
             try:
                 port = int(port_str) if port_str is not None else None
             except ValueError:
                 # ignore ports that are not valid integers
                 pass
 
-        return (proto, domain, port)
+        # return (proto, domain, port, prefix)
+        return (proto, domain, port, prefix)
 
     def _get_header_value_by_name(
         self, scope: Scope, header_name: str, default_value: str = None
