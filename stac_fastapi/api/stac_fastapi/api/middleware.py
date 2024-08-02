@@ -116,6 +116,7 @@ class ProxyHeaderMiddleware:
                         except ValueError:
                             # ignore ports that are not valid integers
                             pass
+            prefix = None
         else:
             domain = self._get_header_value_by_name(scope, "x-forwarded-host", domain)
             proto = self._get_header_value_by_name(scope, "x-forwarded-proto", proto)
