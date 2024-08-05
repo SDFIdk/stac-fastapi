@@ -136,6 +136,14 @@ def test_replace_header_value_by_name(
             {
                 "scheme": "http",
                 "server": ["testserver", 80],
+                "headers": [(b"x-forwarded-prefix", b"/rest")],
+            },
+            ("http", "testserver", 80, "/rest"),
+        ),
+        (
+            {
+                "scheme": "http",
+                "server": ["testserver", 80],
                 "headers": [(b"x-forwarded-port", b"not-an-integer")],
             },
             ("http", "testserver", 80, None),
