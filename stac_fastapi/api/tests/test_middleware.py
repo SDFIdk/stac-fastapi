@@ -74,7 +74,7 @@ def test_replace_header_value_by_name(
     [
         (
             {"scheme": "https", "server": ["testserver", 80], "headers": []},
-            ("https", "testserver", 80),
+            ("https", "testserver", 80, None),
         ),
         (
             {
@@ -82,7 +82,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"host", b"testserver:81")],
             },
-            ("http", "testserver", 81),
+            ("http", "testserver", 81, None),
         ),
         (
             {
@@ -90,7 +90,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"host", b"testserver")],
             },
-            ("http", "testserver", None),
+            ("http", "testserver", None, None),
         ),
         (
             {
@@ -98,7 +98,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"forwarded", b"proto=https;host=test:1234")],
             },
-            ("https", "test", 1234),
+            ("https", "test", 1234, None),
         ),
         (
             {
@@ -106,7 +106,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"forwarded", b"proto=https;host=test:not-an-integer")],
             },
-            ("https", "test", 80),
+            ("https", "test", 80, None),
         ),
         (
             {
@@ -114,7 +114,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"x-forwarded-host", b"test")],
             },
-            ("http", "test", 80),
+            ("http", "test", 80, None),
         ),
         (
             {
@@ -122,7 +122,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"x-forwarded-proto", b"https")],
             },
-            ("https", "testserver", 80),
+            ("https", "testserver", 80, None),
         ),
         (
             {
@@ -130,7 +130,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"x-forwarded-port", b"1111")],
             },
-            ("http", "testserver", 1111),
+            ("http", "testserver", 1111, None),
         ),
         (
             {
@@ -138,7 +138,7 @@ def test_replace_header_value_by_name(
                 "server": ["testserver", 80],
                 "headers": [(b"x-forwarded-port", b"not-an-integer")],
             },
-            ("http", "testserver", 80),
+            ("http", "testserver", 80, None),
         ),
         (
             {
@@ -151,7 +151,7 @@ def test_replace_header_value_by_name(
                     (b"x-forwarded-proto", b"https"),
                 ],
             },
-            ("https", "test", 1234),
+            ("https", "test", 1234, None),
         ),
     ],
 )
