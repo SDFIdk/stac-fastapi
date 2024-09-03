@@ -295,21 +295,21 @@ class LandingPageMixin(abc.ABC):
                     "rel": "data",
                     "type": MimeTypes.json,
                     # "href": urljoin(base_url, "collections"),
-                    "href": href_builder.build("./collections"),
+                    "href": href_builder.build("collections"),
                 },
                 {
                     "rel": Relations.conformance.value,
                     "type": MimeTypes.json,
                     "title": "STAC/OGC conformance classes implemented by this server",
                     # "href": urljoin(base_url, "conformance"),
-                    "href": href_builder.build("./conformance"),
+                    "href": href_builder.build("conformance"),
                 },
                 {
                     "rel": Relations.search.value,
                     "type": MimeTypes.geojson,
                     "title": "STAC search",
                     # "href": urljoin(base_url, "search"),
-                    "href": href_builder.build("./search"),
+                    "href": href_builder.build("search"),
                     "method": "GET",
                 },
                 {
@@ -317,7 +317,7 @@ class LandingPageMixin(abc.ABC):
                     "type": MimeTypes.geojson,
                     "title": "STAC search",
                     # "href": urljoin(base_url, "search"),
-                    "href": href_builder.build("./search"),
+                    "href": href_builder.build("search"),
                     "method": "POST",
                 },
             ],
@@ -405,7 +405,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                     "type": "application/schema+json",
                     "title": "Queryables",
                     # "href": urljoin(base_url, "queryables"),
-                    "href": hrefbuilder.build("/queryables"),
+                    "href": hrefbuilder.build("queryables"),
                     "method": "GET",
                 }
             )
@@ -430,7 +430,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
                 # "href": str(request.url_for("openapi")),
-                "href": hrefbuilder.build("/api"),
+                "href": hrefbuilder.build("api"),
             }
         )
 
@@ -441,7 +441,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "type": "text/html",
                 "title": "OpenAPI service documentation",
                 # "href": str(request.url_for("swagger_ui_html")),
-                "href": hrefbuilder.build("/api.html"),
+                "href": hrefbuilder.build("api.html"),
             }
         )
 
